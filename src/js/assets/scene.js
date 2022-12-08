@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { Resource } from "./resource";
 import { Camera } from "./camera";
 import { Light } from "./light";
+import { Button } from "./button";
 
 class Scene{
     constructor(file = null){
@@ -13,7 +14,7 @@ class Scene{
         this.resource = new Resource(file);
         this.camera = new Camera();
         this.light = new Light();
-
+        this.button = new Button();
         this.setScene();
         this.setMesh();
         this.setGrid();
@@ -22,13 +23,8 @@ class Scene{
     setScene(){
         this.scene.background = new THREE.Color( 0x101010 );
 
-        // this.scene.add(this.resource.obj);
-
-        // this.scene.add(this.light.ambientLight);
-
-        // this.scene.add(this.camera.camera);
         this.scene.add(this.resource.obj)
-
+    
     this.scene.add(this.light.ambientLight)
 
     this.scene.add(this.camera.camera)
@@ -37,11 +33,13 @@ class Scene{
     }
     
     setMesh(){
-        this.mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
-        this.mesh.rotation.x = - Math.PI / 2;
-        this.mesh.receiveShadow = true;
+        this.scene.add(this.button.mesh);
 
-        this.scene.add(this.mesh);
+        this.scene.add(this.button.button9)
+        this.scene.add(this.button.button12)
+        this.scene.add(this.button.button10)
+        this.scene.add(this.button.button13)
+        this.scene.add(this.button.button11);
     }
 
     setGrid(){
