@@ -31,8 +31,7 @@ class Event{
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
             if(this.client) this.client.end();
-            this.setMQTT(host, port, path, subscribe_topic, statusElement.style, edukit);
-            startButton.style.color = 'green';
+            this.setMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, edukit);
         });
 
         //start button
@@ -92,7 +91,7 @@ class Event{
         });
 
         //connect at start
-        this.setMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, edukit);
+        // this.setMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, edukit);
 
         element.appendChild(eventElement);
     }
