@@ -3,15 +3,111 @@
  * 방식은 자유지만 본 프로젝트에서는 mqtt를 사용함
  */
 import mqtt from "mqtt";
+import * as THREE from 'three'
+import calculate from "../plugins/raycast"
 
 class Event{
-    constructor(element, edukit){
+    constructor(element, renderer, scene){
+        ////config///
         const publish_topic = "myFront";
         const subscribe_topic = "myEdukit";
         const port = '9001';
         const host = 'localhost';
         const path = '';
 
+
+        ////3D buttons////
+        let button1 = true;
+        let button2 = true;
+        let button3 = true;
+        let button4 = true;
+        let button5 = true;
+
+        const raycast1 = new THREE.Raycaster();
+        raycast1.layers.set(1);
+        const pointer1 = new THREE.Vector2();
+        
+        renderer.domElement.addEventListener('pointerdown', event =>{
+            const xy = calculate.ray(event, renderer)
+            const x=xy.x;
+            const y=xy.y;
+
+            pointer1.set(x, y);
+
+            raycast1.setFromCamera(pointer1, scene.camera.cameraElement);
+            const intersects = raycast1.intersectObjects(scene.scene.children);
+
+            if(intersects){
+                const intersect = intersects[0]
+                console.log(intersect.object.name)
+                if(intersect.object.name=="1호기"){
+                    if(button1==true){
+                        intersect.object.material.color.set(0x770000)
+                        this.sendMQTT(publish_topic, {tagId : '9', value : '0'});
+                        button1=false
+                    }
+                    else{
+                        intersect.object.material.color.set(0x007700)
+                        this.sendMQTT(publish_topic, {tagId : '9', value : '1'});
+                        button1=true
+                    }
+                }
+
+                if(intersect.object.name=="SEN 1"){
+                    if(button2==true){
+                        intersect.object.material.color.set(0x770000)
+                        this.sendMQTT(publish_topic, {tagId : '12', value : '0'});
+                        button2=false
+                    }
+                    else{
+                        intersect.object.material.color.set(0x007700)
+                        this.sendMQTT(publish_topic, {tagId : '12', value : '1'});
+                        button2=true
+                    }
+                }
+
+                if(intersect.object.name=="2호기"){
+                    if(button3==true){
+                        intersect.object.material.color.set(0x770000)
+                        this.sendMQTT(publish_topic, {tagId : '10', value : '0'});
+                        button3=false
+                    }
+                    else{
+                        intersect.object.material.color.set(0x007700)
+                        this.sendMQTT(publish_topic, {tagId : '10', value : '1'});
+                        button3=true
+                    }
+                }
+
+                if(intersect.object.name=="SEN 2"){
+                    if(button4==true){
+                        intersect.object.material.color.set(0x770000)
+                        this.sendMQTT(publish_topic, {tagId : '13', value : '0'});
+                        button4=false
+                    }
+                    else{
+                        intersect.object.material.color.set(0x007700)
+                        this.sendMQTT(publish_topic, {tagId : '13', value : '1'});
+                        button4=true
+                    }
+                }
+
+                if(intersect.object.name=="3호기"){
+                    if(button5==true){
+                        intersect.object.material.color.set(0x770000)
+                        this.sendMQTT(publish_topic, {tagId : '11', value : '0'});
+                        button5=false
+                    }
+                    else{
+                        intersect.object.material.color.set(0x007700)
+                        this.sendMQTT(publish_topic, {tagId : '11', value : '1'});
+                        button5=true
+                    }
+                }
+            }
+        })
+
+        ////2D buttons////
         const eventElement = document.createElement("div");
 
         //connection check & reconnect
@@ -31,8 +127,7 @@ class Event{
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
             if(this.client) this.client.end();
-            this.setMQTT(host, port, path, subscribe_topic, statusElement.style, edukit);
-            startButton.style.color = 'green';
+            this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
         });
 
         //start button
@@ -61,63 +156,42 @@ class Event{
 
         //event listener
         startButton.addEventListener("click",()=>{
-            let meg = {
-                tagId : '1',
-                value : '1'
-            }
             startButton.style.color = "red";
             stopButton.style.color = "green";
             resetButton.style.color = "green";
-            this.setStart(publish_topic, meg);
+            console.log("start")
+            this.sendMQTT(publish_topic, {tagId : '1', value : '1'});
         });
 
         stopButton.addEventListener("click",()=>{
-            let meg = {
-                tagId : '1',
-                value : '0'
-            }
             stopButton.style.color = "red";
             startButton.style.color = "green";
             resetButton.style.color = "green";
-            this.setStop(publish_topic, meg);
+            console.log("stop")
+            this.sendMQTT(publish_topic, {tagId : '1', value : '0'});
         });
 
         resetButton.addEventListener("click",()=>{
-            let meg = {
-                tagId : '8',
-                value : '0'
-            }
             resetButton.style.color = "red";
-            this.setReset(publish_topic, meg);
+            console.log("reset")
+            this.sendMQTT(publish_topic, {tagId : '8', value : '0'});
         });
 
         //connect at start
-        this.setMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, edukit);
+        this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
 
         element.appendChild(eventElement);
     }
 
-    //Event handler
-    setStart(topic, mes){
-        let { tagId, value } = mes;
-        console.log(tagId, value);
+
+    //Send to PLC
+    sendMQTT(topic, mes){
+        console.log(mes);
         this.client.publish(topic, JSON.stringify(mes));
     }
 
-    setStop(topic, mes){
-        let { tagId, value } = mes;
-        console.log(tagId, value);
-        this.client.publish(topic, JSON.stringify(mes));
-    }
-
-    setReset(topic, mes){
-        let { tagId, value } = mes;
-        console.log(tagId, value);
-        this.client.publish(topic, JSON.stringify(mes));
-    }
-
-    //connect at start
-    setMQTT(hostname, port, path, topic, status, start, edukit){
+    //Recieve from PLC
+    receiveMQTT(hostname, port, path, topic, status, start, edukit){
         const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
         this.client = mqtt.connect({
             clientId,
