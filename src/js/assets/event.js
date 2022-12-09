@@ -5,16 +5,19 @@
 import mqtt from "mqtt";
 import * as THREE from 'three'
 import calculate from "../plugins/raycast"
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class Event{
     constructor(element, renderer, scene){
         ////config///
-        const publish_topic = "myFront";
-        const subscribe_topic = "myEdukit";
-        const port = '9001';
-        const host = 'localhost'; // 192.168.0.106   192.168.0.54
-        const path = '';
-
+        // 1호기 2호기 VUE_APP_HOST1 VUE_APP_HOST2
+        const publish_topic = process.env.VUE_APP_PUBLISH_TOPIC
+        const subscribe_topic = process.env.VUE_APP_SUBSCRIBE_TOPIC
+        const port = process.env.VUE_APP_PORT1
+        const host = process.env.VUE_APP_HOST1 
+        const path = process.env.VUE_APP_PATH1;
 
         ////3D buttons////
         let button1 = true;
