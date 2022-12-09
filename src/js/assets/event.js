@@ -133,13 +133,18 @@ class Event{
         statusElement.style.position = 'relative'
         statusElement.style.right = '190%'
         statusElement.style.top = '6.6%'
-
+        
+        
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
+            buttonReset()
+            startButton.classList.add('btn-success');
+            stopButton.classList.add('btn-danger');
+            resetButton.classList.add('btn-warning');
             if(this.client) this.client.end();
             this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
         });
-
+        
         //start button
         const startButton = eventElement.appendChild(document.createElement("button"));
         startButton.innerText = "시작"
@@ -147,7 +152,7 @@ class Event{
         startButton.style.position = 'relative'
         startButton.style.right = '240%'
         startButton.style.top = '18.5%'
-
+        
         //stop button
         const stopButton = eventElement.appendChild(document.createElement("button"));
         stopButton.innerText = "정지"
@@ -162,49 +167,47 @@ class Event{
         resetButton.style.position = 'relative'
         resetButton.style.right = '100%'
         resetButton.style.top = '7.8%'
-
-        //event listener
-        startButton.addEventListener("click",()=>{
-            // console.log(clickCheck());
+        
+        //button classList삭제해주고 다시 class넣기위한 함수
+        const buttonReset = () =>{
+            console.log("button class Reset Start");
             startButton.classList.remove("btn-success","btn-danger","btn-warning");
             stopButton.classList.remove("btn-success","btn-danger","btn-warning");
             resetButton.classList.remove("btn-success","btn-danger","btn-warning");
-            //classList삭제해주고 다시 class넣기
+        }
+
+        //event listener
+        startButton.addEventListener("click",()=>{
+            buttonReset()
             startButton.classList.add('btn-danger');
             stopButton.classList.add('btn-success');
             resetButton.classList.add('btn-danger');
-            console.log("start")
+            console.log("edukit start")
             this.sendMQTT(publish_topic, {tagId : '1', value : '1'});
             startButton.style.pointerEvents = 'none'
             stopButton.style.pointerEvents = 'auto'
             resetButton.style.pointerEvents = 'none'
         });
-
+        
         stopButton.addEventListener("click",()=>{
-            startButton.classList.remove("btn-success","btn-danger","btn-warning");
-            stopButton.classList.remove("btn-success","btn-danger","btn-warning");
-            resetButton.classList.remove("btn-success","btn-danger","btn-warning");
-            //classList삭제해주고 다시 class넣기
+            buttonReset()
             startButton.classList.add('btn', 'btn-success');
             stopButton.classList.add('btn', 'btn-danger');
             resetButton.classList.add('btn', 'btn-success');
-            console.log("stop")        
+            console.log("edukit stop")        
             this.sendMQTT(publish_topic, {tagId : '1', value : '0'});
-
+            
             startButton.style.pointerEvents = 'auto'
             stopButton.style.pointerEvents = 'none'
             resetButton.style.pointerEvents = 'auto'
         });
 
         resetButton.addEventListener("click",()=>{
-            startButton.classList.remove("btn-success","btn-danger","btn-warning");
-            stopButton.classList.remove("btn-success","btn-danger","btn-warning");
-            resetButton.classList.remove("btn-success","btn-danger","btn-warning");
-            //classList삭제해주고 다시 class넣기
+            buttonReset()
             startButton.classList.add('btn', 'btn-success');
             stopButton.classList.add('btn', 'btn-danger');
             resetButton.classList.add('btn', 'btn-danger');
-            console.log("reset")
+            console.log("edukit reset")
             this.sendMQTT(publish_topic, {tagId : '8', value : '0'});
 
             startButton.style.pointerEvents = 'auto'
