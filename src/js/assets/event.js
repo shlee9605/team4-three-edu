@@ -8,13 +8,12 @@ import calculate from "../plugins/raycast"
 
 class Event{
     constructor(element, renderer, scene){
-        ////config///
-        const publish_topic = "myFront";
-        const subscribe_topic = "myEdukit";
-        const port = '9001';
-        const host = '192.168.0.106';
-        const path = '';
-
+        ////config////
+        const publish_topic = process.env.VUE_APP_PUBLISH_TOPIC
+        const subscribe_topic = process.env.VUE_APP_SUBSCRIBE_TOPIC
+        const port = process.env.VUE_APP_PORT
+        const host = process.env.VUE_APP_HOST 
+        const path = process.env.VUE_APP_PATH;
 
         ////3D buttons////
         let button1 = true;
@@ -115,75 +114,71 @@ class Event{
         connectButton.innerText = "Connect"
         connectButton.classList.add('btn', 'btn-primary');
         connectButton.style.position = 'relative'
-        connectButton.style.right = '350%'
-        connectButton.style.top = '25%'
+        connectButton.style.right = '200%'
+        connectButton.style.top = '20%'
+
+        const statusElementt = eventElement.appendChild(document.createElement("span"));
+        statusElementt.innerText = "연결 상태 :";
+        statusElementt.style.position = 'relative'
+        statusElementt.style.right = '285%'
+        statusElementt.style.top = '10%'
 
         const statusElement = eventElement.appendChild(document.createElement("span"));
         statusElement.innerText = "연결";
         statusElement.style.color = "red";
         statusElement.style.position = 'relative'
-        statusElement.style.right = '345%'
-        statusElement.style.top = '18%'
+        statusElement.style.right = '190%'
+        statusElement.style.top = '6.6%'
 
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
             if(this.client) this.client.end();
-            this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
+            this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, scene.resource.edukit);
         });
 
         //start button
         const startButton = eventElement.appendChild(document.createElement("button"));
         startButton.innerText = "시작"
+        startButton.classList.add('btn', 'btn-success');
         startButton.style.position = 'relative'
         startButton.style.right = '240%'
         startButton.style.top = '18.5%'
-        startButton.style.color = 'red'
 
         //stop button
         const stopButton = eventElement.appendChild(document.createElement("button"));
         stopButton.innerText = "정지"
+        stopButton.classList.add('btn', 'btn-danger');
         stopButton.style.position = 'relative'
         stopButton.style.right = '170%'
         stopButton.style.top = '15%'
-        stopButton.style.color = 'red'
+        stopButton.style.top = '13.1%'
 
         //reset button
         const resetButton = eventElement.appendChild(document.createElement("button"));
         resetButton.innerText = "리셋"
+        resetButton.classList.add('btn', 'btn-warning');
         resetButton.style.position = 'relative'
         resetButton.style.right = '100%'
-        resetButton.style.top = '11.5%'
-        resetButton.style.color = 'red'
+        resetButton.style.top = '7.8%'
 
         //event listener
         startButton.addEventListener("click",()=>{
-            startButton.style.color = "red";
-            stopButton.style.color = "green";
-            resetButton.style.color = "green";
-            console.log("start")
-            this.sendMQTT(publish_topic, {tagId : '1', value : '1'});
+            this.START(startButton, stopButton, resetButton, publish_topic)
         });
 
         stopButton.addEventListener("click",()=>{
-            stopButton.style.color = "red";
-            startButton.style.color = "green";
-            resetButton.style.color = "green";
-            console.log("stop")
-            this.sendMQTT(publish_topic, {tagId : '1', value : '0'});
+            this.STOP(startButton, stopButton, resetButton, publish_topic)
         });
 
         resetButton.addEventListener("click",()=>{
-            resetButton.style.color = "red";
-            console.log("reset")
-            this.sendMQTT(publish_topic, {tagId : '8', value : '0'});
+            this.RESET(startButton, stopButton, resetButton, publish_topic)
         });
 
         //connect at start
-        this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
+        this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, scene.resource.edukit);
 
         element.appendChild(eventElement);
     }
-
 
     //Send to PLC
     sendMQTT(topic, mes){
@@ -192,7 +187,7 @@ class Event{
     }
 
     //Recieve from PLC
-    receiveMQTT(hostname, port, path, topic, status, start, edukit){
+    receiveMQTT(hostname, port, path, topic, status, edukit){
         const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
         this.client = mqtt.connect({
             clientId,
@@ -206,7 +201,6 @@ class Event{
         this.client.on('connect', () => {
             console.log("MQTT Connected");
             status.color = "green";
-            start.color = "green";
 
             this.client.subscribe([topic], () => {
                 console.log(`토픽 연결 완료: ${topic}`);
@@ -222,6 +216,53 @@ class Event{
                 edukit["xAxis"] = data[1];
             })
         });
+    }
+
+    //button classList삭제해주고 다시 class넣기위한 함수
+    ButtonReset(start, stop, reset){
+        start.classList.remove("btn-success","btn-danger","btn-warning");
+        stop.classList.remove("btn-success","btn-danger","btn-warning");
+        reset.classList.remove("btn-success","btn-danger","btn-warning");
+        //classList삭제해주고 다시 class넣기
+    }
+
+    //starting button styles
+    START(start, stop, reset, topic){
+        this.ButtonReset(start, stop, reset);
+        start.classList.add('btn-danger');
+        stop.classList.add('btn-success');
+        reset.classList.add('btn-danger');
+        console.log("edukit start")
+        this.sendMQTT(topic, {tagId : '1', value : '1'});
+        start.style.pointerEvents = 'none'
+        stop.style.pointerEvents = 'auto'
+        reset.style.pointerEvents = 'none'
+    }
+
+    //stopping button styles
+    STOP(start, stop, reset, topic){
+        this.ButtonReset(start, stop, reset);
+        start.classList.add('btn', 'btn-success');
+        stop.classList.add('btn', 'btn-danger');
+        reset.classList.add('btn', 'btn-success');
+        console.log("edukit stop")    
+        this.sendMQTT(topic, {tagId : '1', value : '0'});
+        start.style.pointerEvents = 'auto'
+        stop.style.pointerEvents = 'none'
+        reset.style.pointerEvents = 'auto'
+    }
+
+    //resetting button styles
+    RESET(start, stop, reset, topic){
+        this.ButtonReset(start, stop, reset);
+        start.classList.add('btn', 'btn-success');
+        stop.classList.add('btn', 'btn-danger');
+        reset.classList.add('btn', 'btn-danger');
+        console.log("edukit reset")
+        this.sendMQTT(topic, {tagId : '8', value : '0'});
+        start.style.pointerEvents = 'auto'
+        stop.style.pointerEvents = 'none'
+        reset.style.pointerEvents = 'none'
     }
 }
 
