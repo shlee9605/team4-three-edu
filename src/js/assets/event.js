@@ -113,6 +113,7 @@ class Event{
         //connection check & reconnect
         const connectButton = eventElement.appendChild(document.createElement("button"));
         connectButton.innerText = "Connect"
+        connectButton.classList.add('btn', 'btn-primary');
         connectButton.style.position = 'relative'
         connectButton.style.right = '350%'
         connectButton.style.top = '25%'
