@@ -150,7 +150,6 @@ class Event{
         stopButton.classList.add('btn', 'btn-danger');
         stopButton.style.position = 'relative'
         stopButton.style.right = '170%'
-        stopButton.style.top = '15%'
         stopButton.style.top = '13.1%'
 
         //reset button
