@@ -18,7 +18,6 @@ class Event{
         const host = process.env.VUE_APP_HOST 
         const path = process.env.VUE_APP_PATH;
 
-
         ////3D buttons////
         let button1 = true;
         let button2 = true;
@@ -172,18 +171,16 @@ class Event{
         startButton.addEventListener("click",()=>{
             this.START(startButton, stopButton, resetButton, publish_topic)
         });
-        
         stopButton.addEventListener("click",()=>{
             this.STOP(startButton, stopButton, resetButton, publish_topic)
         });
-
         resetButton.addEventListener("click",()=>{
             this.RESET(startButton, stopButton, resetButton, publish_topic)
         });
 
         //connect at start
         this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, scene.resource.edukit);
-
+        
         element.appendChild(eventElement);
     }
 
