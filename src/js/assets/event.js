@@ -5,6 +5,9 @@
 import mqtt from "mqtt";
 import * as THREE from 'three'
 import calculate from "../plugins/raycast"
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class Event{
     constructor(element, renderer, scene){
@@ -14,6 +17,7 @@ class Event{
         const port = process.env.VUE_APP_PORT
         const host = process.env.VUE_APP_HOST 
         const path = process.env.VUE_APP_PATH;
+
 
         ////3D buttons////
         let button1 = true;
@@ -132,10 +136,14 @@ class Event{
 
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
+            buttonReset()
+            startButton.classList.add('btn-success');
+            stopButton.classList.add('btn-danger');
+            resetButton.classList.add('btn-warning');
             if(this.client) this.client.end();
             this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, scene.resource.edukit);
         });
-
+        
         //start button
         const startButton = eventElement.appendChild(document.createElement("button"));
         startButton.innerText = "시작"
@@ -150,7 +158,6 @@ class Event{
         stopButton.classList.add('btn', 'btn-danger');
         stopButton.style.position = 'relative'
         stopButton.style.right = '170%'
-        stopButton.style.top = '15%'
         stopButton.style.top = '13.1%'
 
         //reset button
@@ -160,12 +167,12 @@ class Event{
         resetButton.style.position = 'relative'
         resetButton.style.right = '100%'
         resetButton.style.top = '7.8%'
-
+      
         //event listener
         startButton.addEventListener("click",()=>{
             this.START(startButton, stopButton, resetButton, publish_topic)
         });
-
+        
         stopButton.addEventListener("click",()=>{
             this.STOP(startButton, stopButton, resetButton, publish_topic)
         });
