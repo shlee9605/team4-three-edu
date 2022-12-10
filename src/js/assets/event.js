@@ -135,7 +135,7 @@ class Event{
 
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
-            buttonReset()
+            this.ButtonReset(startButton, stopButton, resetButton)
             startButton.classList.add('btn-success');
             stopButton.classList.add('btn-danger');
             resetButton.classList.add('btn-warning');
