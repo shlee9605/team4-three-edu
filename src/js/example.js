@@ -9,8 +9,6 @@ import { Control } from "./assets/control"
 import { Render } from "./assets/render";
 import { Event } from "./assets/event";
 
-// import * as THREE from "three";
-
 import { Gui } from "./plugins/gui"
 
 export default async (element) => {
@@ -68,43 +66,6 @@ export default async (element) => {
 
     // MQTT Event Setting
     new Event(element, renderer, scene);
-    
-    // const raycast = new THREE.Raycaster();
-    // raycast.layers.set(1);
-    // const pointer = new THREE.Vector2();
-    // renderElement.addEventListener('pointerdown', event =>{
-    //     const cx = event.clientX
-    //     const cy = event.clientY
-    //     const tx = event.offsetX
-    //     const ty = event.offsetY
-
-    //     const bx = cx - tx
-    //     const by = cy - ty
-    //     const rx = cx - bx
-    //     const ry = cy - by
-        
-    //     const width = renderer.domElement.clientWidth
-    //     const height = renderer.domElement.clientHeight
-
-    //     const wx = rx/width
-    //     const wy = ry/height
-
-    //     const x = wx * 2 - 1
-    //     const y = -wy * 2 + 1
-
-    //     pointer.set(x, y);
-
-    //     raycast.setFromCamera(pointer, cameraElement);
-    //     const intersects = raycast.intersectObjects(scene.scene.children);
-
-    //     if(intersects){
-    //         const intersect = intersects[0]
-    //         // console.log(intersect)
-    //         intersect.object.material.color.set(0x770000)
-    //         // this.event.setStart('myFront', {tagId : '1', value : '0'});
-    //         // intersect.object.material.color.set(THREE.MathUtils.randInt(0x000000,0xffffff))
-    //     }
-    // })
 
     return element;
 }

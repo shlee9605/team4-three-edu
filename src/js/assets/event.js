@@ -12,7 +12,7 @@ class Event{
         const publish_topic = "myFront";
         const subscribe_topic = "myEdukit";
         const port = '9001';
-        const host = 'localhost';
+        const host = '192.168.0.106';
         const path = '';
 
 
@@ -23,19 +23,19 @@ class Event{
         let button4 = true;
         let button5 = true;
 
-        const raycast1 = new THREE.Raycaster();
-        raycast1.layers.set(1);
-        const pointer1 = new THREE.Vector2();
+        const raycast = new THREE.Raycaster();
+        raycast.layers.set(1);
+        const pointer = new THREE.Vector2();
         
         renderer.domElement.addEventListener('pointerdown', event =>{
             const xy = calculate.ray(event, renderer)
             const x=xy.x;
             const y=xy.y;
 
-            pointer1.set(x, y);
+            pointer.set(x, y);
 
-            raycast1.setFromCamera(pointer1, scene.camera.cameraElement);
-            const intersects = raycast1.intersectObjects(scene.scene.children);
+            raycast.setFromCamera(pointer, scene.camera.cameraElement);
+            const intersects = raycast.intersectObjects(scene.scene.children);
 
             if(intersects){
                 const intersect = intersects[0]
