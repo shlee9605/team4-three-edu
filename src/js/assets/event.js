@@ -5,9 +5,6 @@
 import mqtt from "mqtt";
 import * as THREE from 'three'
 import calculate from "../plugins/raycast"
-import dotenv from "dotenv";
-
-dotenv.config();
 
 class Event{
     constructor(element, renderer, scene){
@@ -135,10 +132,7 @@ class Event{
 
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
-            this.ButtonReset(startButton, stopButton, resetButton)
-            startButton.classList.add('btn-success');
-            stopButton.classList.add('btn-danger');
-            resetButton.classList.add('btn-warning');
+            this.ButtonConnect(startButton, stopButton, resetButton)
             if(this.client) this.client.end();
             this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, scene.resource.edukit);
         });
@@ -155,6 +149,7 @@ class Event{
         const stopButton = eventElement.appendChild(document.createElement("button"));
         stopButton.innerText = "정지"
         stopButton.classList.add('btn', 'btn-danger');
+        stopButton.style.pointerEvents = 'none'
         stopButton.style.position = 'relative'
         stopButton.style.right = '170%'
         stopButton.style.top = '13.1%'
@@ -220,6 +215,16 @@ class Event{
                 edukit["xAxis"] = data[1];
             })
         });
+    }
+
+    ButtonConnect(start, stop, reset){
+        this.ButtonReset(start, stop, reset)
+        start.classList.add('btn-success');
+        stop.classList.add('btn-danger');
+        reset.classList.add('btn-warning');
+        start.style.pointerEvents = 'auto'
+        stop.style.pointerEvents = 'none'
+        reset.style.pointerEvents = 'auto'
     }
 
     //button classList삭제해주고 다시 class넣기위한 함수
