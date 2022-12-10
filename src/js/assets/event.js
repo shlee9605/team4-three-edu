@@ -5,16 +5,19 @@
 import mqtt from "mqtt";
 import * as THREE from 'three'
 import calculate from "../plugins/raycast"
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class Event{
     constructor(element, renderer, scene){
         ////config///
-        const publish_topic = "myFront";
-        const subscribe_topic = "myEdukit";
-        const port = '9001';
-        const host = '192.168.0.106';
-        const path = '';
-
+        // 1호기 2호기 VUE_APP_HOST1 VUE_APP_HOST2
+        const publish_topic = process.env.VUE_APP_PUBLISH_TOPIC
+        const subscribe_topic = process.env.VUE_APP_SUBSCRIBE_TOPIC
+        const port = process.env.VUE_APP_PORT1
+        const host = process.env.VUE_APP_HOST1 
+        const path = process.env.VUE_APP_PATH1;
 
         ////3D buttons////
         let button1 = true;
@@ -113,68 +116,103 @@ class Event{
         //connection check & reconnect
         const connectButton = eventElement.appendChild(document.createElement("button"));
         connectButton.innerText = "Connect"
+        connectButton.classList.add('btn', 'btn-primary');
         connectButton.style.position = 'relative'
-        connectButton.style.right = '350%'
-        connectButton.style.top = '25%'
+        connectButton.style.right = '200%'
+        connectButton.style.top = '20%'
+
+        const statusElementt = eventElement.appendChild(document.createElement("span"));
+        statusElementt.innerText = "연결 상태 :";
+        statusElementt.style.position = 'relative'
+        statusElementt.style.right = '285%'
+        statusElementt.style.top = '10%'
 
         const statusElement = eventElement.appendChild(document.createElement("span"));
         statusElement.innerText = "연결";
         statusElement.style.color = "red";
         statusElement.style.position = 'relative'
-        statusElement.style.right = '345%'
-        statusElement.style.top = '18%'
-
+        statusElement.style.right = '190%'
+        statusElement.style.top = '6.6%'
+        
+        
         connectButton.addEventListener("click", () => {
             statusElement.style.color = "red";
+            buttonReset()
+            startButton.classList.add('btn-success');
+            stopButton.classList.add('btn-danger');
+            resetButton.classList.add('btn-warning');
             if(this.client) this.client.end();
             this.receiveMQTT(host, port, path, subscribe_topic, statusElement.style, startButton.style, scene.resource.edukit);
         });
-
+        
         //start button
         const startButton = eventElement.appendChild(document.createElement("button"));
         startButton.innerText = "시작"
+        startButton.classList.add('btn', 'btn-success');
         startButton.style.position = 'relative'
         startButton.style.right = '240%'
         startButton.style.top = '18.5%'
-        startButton.style.color = 'red'
-
+        
         //stop button
         const stopButton = eventElement.appendChild(document.createElement("button"));
         stopButton.innerText = "정지"
+        stopButton.classList.add('btn', 'btn-danger');
         stopButton.style.position = 'relative'
         stopButton.style.right = '170%'
-        stopButton.style.top = '15%'
-        stopButton.style.color = 'red'
-
+        stopButton.style.top = '13.1%'
         //reset button
         const resetButton = eventElement.appendChild(document.createElement("button"));
         resetButton.innerText = "리셋"
+        resetButton.classList.add('btn', 'btn-warning');
         resetButton.style.position = 'relative'
         resetButton.style.right = '100%'
-        resetButton.style.top = '11.5%'
-        resetButton.style.color = 'red'
+        resetButton.style.top = '7.8%'
+        
+        //button classList삭제해주고 다시 class넣기위한 함수
+        const buttonReset = () =>{
+            console.log("button class Reset Start");
+            startButton.classList.remove("btn-success","btn-danger","btn-warning");
+            stopButton.classList.remove("btn-success","btn-danger","btn-warning");
+            resetButton.classList.remove("btn-success","btn-danger","btn-warning");
+        }
 
         //event listener
         startButton.addEventListener("click",()=>{
-            startButton.style.color = "red";
-            stopButton.style.color = "green";
-            resetButton.style.color = "green";
-            console.log("start")
+            buttonReset()
+            startButton.classList.add('btn-danger');
+            stopButton.classList.add('btn-success');
+            resetButton.classList.add('btn-danger');
+            console.log("edukit start")
             this.sendMQTT(publish_topic, {tagId : '1', value : '1'});
+            startButton.style.pointerEvents = 'none'
+            stopButton.style.pointerEvents = 'auto'
+            resetButton.style.pointerEvents = 'none'
         });
-
+        
         stopButton.addEventListener("click",()=>{
-            stopButton.style.color = "red";
-            startButton.style.color = "green";
-            resetButton.style.color = "green";
-            console.log("stop")
+            buttonReset()
+            startButton.classList.add('btn', 'btn-success');
+            stopButton.classList.add('btn', 'btn-danger');
+            resetButton.classList.add('btn', 'btn-success');
+            console.log("edukit stop")        
             this.sendMQTT(publish_topic, {tagId : '1', value : '0'});
+            
+            startButton.style.pointerEvents = 'auto'
+            stopButton.style.pointerEvents = 'none'
+            resetButton.style.pointerEvents = 'auto'
         });
 
         resetButton.addEventListener("click",()=>{
-            resetButton.style.color = "red";
-            console.log("reset")
+            buttonReset()
+            startButton.classList.add('btn', 'btn-success');
+            stopButton.classList.add('btn', 'btn-danger');
+            resetButton.classList.add('btn', 'btn-danger');
+            console.log("edukit reset")
             this.sendMQTT(publish_topic, {tagId : '8', value : '0'});
+
+            startButton.style.pointerEvents = 'auto'
+            stopButton.style.pointerEvents = 'none'
+            resetButton.style.pointerEvents = 'none'
         });
 
         //connect at start
@@ -182,7 +220,6 @@ class Event{
 
         element.appendChild(eventElement);
     }
-
 
     //Send to PLC
     sendMQTT(topic, mes){
@@ -205,7 +242,6 @@ class Event{
         this.client.on('connect', () => {
             console.log("MQTT Connected");
             status.color = "green";
-            start.color = "green";
 
             this.client.subscribe([topic], () => {
                 console.log(`토픽 연결 완료: ${topic}`);
