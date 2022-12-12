@@ -4,12 +4,18 @@ class Button{
     constructor(){
         this.mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
 
-        this.button9 = new THREE.Mesh( new THREE.CylinderGeometry(1.5,1.5,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
-        this.button12 = new THREE.Mesh( new THREE.CylinderGeometry(1.5,1.5,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
-        this.button10 = new THREE.Mesh( new THREE.CylinderGeometry(1.5,1.5,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
-        this.button13 = new THREE.Mesh( new THREE.CylinderGeometry(1.5,1.5,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
-        this.button11 = new THREE.Mesh( new THREE.CylinderGeometry(1.5,1.5,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
-
+        this.button9 = new THREE.Mesh( new THREE.CylinderGeometry(1,1,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
+        this.button12 = new THREE.Mesh( new THREE.CylinderGeometry(1,1,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
+        this.button10 = new THREE.Mesh( new THREE.CylinderGeometry(1,1,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
+        this.button13 = new THREE.Mesh( new THREE.CylinderGeometry(1,1,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
+        this.button11 = new THREE.Mesh( new THREE.CylinderGeometry(1,1,1,100), new THREE.MeshPhongMaterial({color: 0x007700, specular: 0x00ff00, shininess: 100}));
+        
+        this.cube1 = new THREE.Mesh( new THREE.BoxGeometry(3,1,3), new THREE.MeshPhongMaterial({color: 0x666666, specular: 0x00ff00, shininess: 100}));
+        this.cube2 = new THREE.Mesh( new THREE.BoxGeometry(3,1,3), new THREE.MeshPhongMaterial({color: 0x666666, specular: 0x00ff00, shininess: 100}));
+        this.cube3 = new THREE.Mesh( new THREE.BoxGeometry(3,1,3), new THREE.MeshPhongMaterial({color: 0x666666, specular: 0x00ff00, shininess: 100}));
+        this.cube4 = new THREE.Mesh( new THREE.BoxGeometry(3,1,3), new THREE.MeshPhongMaterial({color: 0x666666, specular: 0x00ff00, shininess: 100}));
+        this.cube5 = new THREE.Mesh( new THREE.BoxGeometry(3,1,3), new THREE.MeshPhongMaterial({color: 0x666666, specular: 0x00ff00, shininess: 100}));
+        
         this.setButton();
     }
 
@@ -51,6 +57,33 @@ class Button{
         this.button11.position.y+=0.5
         this.button11.position.z+=16
         this.button11.layers.enable(1);
+
+        this.cube1.name="1호기버튼"
+        this.cube1.position.x+=-15
+        this.cube1.position.y+=-0.5
+        this.cube1.position.z+=16
+
+        this.cube2.name="SEN1 버튼"
+        this.cube2.position.x+=-10
+        this.cube2.position.y+=-0.5
+        this.cube2.position.z+=16
+        
+        this.cube3.name="2호기버튼"
+        this.cube3.position.x+=5
+        this.cube3.position.y+=-0.5
+        this.cube3.position.z+=16
+        
+        this.cube4.name="SEN2 버튼"
+        this.cube4.position.x+=0
+        this.cube4.position.y+=-0.5
+        this.cube4.position.z+=16
+
+        this.cube5.name="3호기버튼"
+        this.cube5.position.x+=-5
+        this.cube5.position.y+=-0.5
+        this.cube5.position.z+=16
+
+
     }
 }
 
