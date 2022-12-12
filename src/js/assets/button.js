@@ -40,7 +40,7 @@ class Button{
         this.button10.rotateY(- (Math.PI/2))
         this.button10.name="2호기"
         this.button10.position.x-=5
-        this.button10.position.y+=0.4
+        this.button10.position.y+=0.5
         this.button10.position.z+=16
         this.button10.layers.enable(1);
 
