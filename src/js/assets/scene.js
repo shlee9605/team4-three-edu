@@ -43,6 +43,11 @@ class Scene{
         this.scene.add(this.button.button10)
         this.scene.add(this.button.button13)
         this.scene.add(this.button.button11);
+        this.scene.add(this.button.cube1);
+        this.scene.add(this.button.cube2);
+        this.scene.add(this.button.cube3);
+        this.scene.add(this.button.cube4);
+        this.scene.add(this.button.cube5);
   
     
         this.scene.add(this.trafficLight.trafficLight1)

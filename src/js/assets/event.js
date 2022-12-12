@@ -42,12 +42,14 @@ class Event{
                 if(intersect.object.name=="1호기"){
                     if(button1==true){
                         intersect.object.material.color.set(0x770000)
+                        scene.button.button9.position.y+=-0.5
                         this.sendMQTT(publish_topic, {tagId : '9', value : '0'});
                         button1=false
                     }
                     else{
                         intersect.object.material.color.set(0x007700)
                         this.sendMQTT(publish_topic, {tagId : '9', value : '1'});
+                        scene.button.button9.position.y+=0.5
                         button1=true
                     }
                 }
@@ -55,11 +57,13 @@ class Event{
                 if(intersect.object.name=="SEN 1"){
                     if(button2==true){
                         intersect.object.material.color.set(0x770000)
+                        scene.button.button12.position.y+=-0.5
                         this.sendMQTT(publish_topic, {tagId : '12', value : '0'});
                         button2=false
                     }
                     else{
                         intersect.object.material.color.set(0x007700)
+                        scene.button.button12.position.y+=0.5
                         this.sendMQTT(publish_topic, {tagId : '12', value : '1'});
                         button2=true
                     }
@@ -68,11 +72,13 @@ class Event{
                 if(intersect.object.name=="2호기"){
                     if(button3==true){
                         intersect.object.material.color.set(0x770000)
+                        scene.button.button10.position.y+=-0.5
                         this.sendMQTT(publish_topic, {tagId : '10', value : '0'});
                         button3=false
                     }
                     else{
                         intersect.object.material.color.set(0x007700)
+                        scene.button.button10.position.y+=0.5
                         this.sendMQTT(publish_topic, {tagId : '10', value : '1'});
                         button3=true
                     }
@@ -81,11 +87,13 @@ class Event{
                 if(intersect.object.name=="SEN 2"){
                     if(button4==true){
                         intersect.object.material.color.set(0x770000)
+                        scene.button.button13.position.y+=-0.5
                         this.sendMQTT(publish_topic, {tagId : '13', value : '0'});
                         button4=false
                     }
                     else{
                         intersect.object.material.color.set(0x007700)
+                        scene.button.button13.position.y+=0.5
                         this.sendMQTT(publish_topic, {tagId : '13', value : '1'});
                         button4=true
                     }
@@ -94,11 +102,13 @@ class Event{
                 if(intersect.object.name=="3호기"){
                     if(button5==true){
                         intersect.object.material.color.set(0x770000)
+                        scene.button.button11.position.y+=-0.5
                         this.sendMQTT(publish_topic, {tagId : '11', value : '0'});
                         button5=false
                     }
                     else{
                         intersect.object.material.color.set(0x007700)
+                        scene.button.button11.position.y+=0.5
                         this.sendMQTT(publish_topic, {tagId : '11', value : '1'});
                         button5=true
                     }
@@ -241,14 +251,16 @@ class Event{
                 let message = JSON.parse(payload);
                 try{ 
                 let data = message.Wrapper.filter((p)=>p.tagId === "21" || p.tagId === "22" || p.tagId === "3" || p.tagId === "4" || p.tagId === "5" || p.tagId === "6" || p.tagId === "18" || p.tagId === "19" || p.tagId === "20");
+
+
                 // console.log(data);
                 // data[0]1호기 작동여부 [1]2호기 작동여부 [2]3호기 작동 여부 [3] 비전센서 값
                 // [4~5~6] 그린 옐로 레드 램프
                 if(data[0].value == true){
                     _cup += 1
                     _cup_color=false
-                    basket.innerText = "start"
-                    console.log('시작', basket.innerText );
+                    // basket.innerText = "start"
+                    // console.log('시작', basket.innerText );
                 }
                 
                 if(_cup != _cup2 && data[3].value === true){                    
@@ -266,7 +278,8 @@ class Event{
                         console.log("빨간색")
                     }
                 }
-                console.log(scene)
+                
+                //light status
                 if(data[4].value == true){
                     // console.log("green on")
                     scene.trafficLight.trafficLight1.material.color.set(0x00FF00)
