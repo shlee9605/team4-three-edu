@@ -6,6 +6,7 @@ import { Resource } from "./resource";
 import { Camera } from "./camera";
 import { Light } from "./light";
 import { Button } from "./button";
+import { TrafficLight } from "./trafficLight";
 
 class Scene{
     constructor(file = null){
@@ -15,6 +16,7 @@ class Scene{
         this.camera = new Camera();
         this.light = new Light();
         this.button = new Button();
+        this.trafficLight = new TrafficLight();
         this.setScene();
         this.setMesh();
         this.setGrid();
@@ -30,6 +32,7 @@ class Scene{
     this.scene.add(this.camera.camera)
 
     this.scene.add(this.light.dirLight)
+    
     }
     
     setMesh(){
@@ -40,6 +43,15 @@ class Scene{
         this.scene.add(this.button.button10)
         this.scene.add(this.button.button13)
         this.scene.add(this.button.button11);
+  
+    
+        this.scene.add(this.trafficLight.trafficLight1)
+        this.scene.add(this.trafficLight.trafficLight2)
+        this.scene.add(this.trafficLight.trafficLight3)
+        this.scene.add(this.trafficLight.pillarTop1)
+        this.scene.add(this.trafficLight.pillarTop2)
+        this.scene.add(this.trafficLight.pillarFloor)
+        this.scene.add(this.trafficLight.pillar)
     }
 
     setGrid(){
